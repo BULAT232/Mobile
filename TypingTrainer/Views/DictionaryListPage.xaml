@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:TypingTrainer.ViewModels"
+             xmlns:models="clr-namespace:TypingTrainer.Models"
+             x:Class="TypingTrainer.Views.DictionaryListPage"
+             x:DataType="vm:DictionaryListViewModel"
+             Title="Словари">
+
+    <Grid RowDefinitions="*,Auto" Padding="16" RowSpacing="10">
+
+        <!-- Dictionary List -->
+        <CollectionView Grid.Row="0"
+                        ItemsSource="{Binding Dictionaries}"
+                        SelectionMode="None">
+            <CollectionView.EmptyView>
+                <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center" Spacing="10">
+                    <Label Text="📚" FontSize="48" HorizontalOptions="Center" />
+                    <Label Text="Нет словарей" FontSize="18"
+                           TextColor="{StaticResource Gray400}"
+                           HorizontalOptions="Center" />
+                </VerticalStackLayout>
+            </CollectionView.EmptyView>
+
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="models:TypingDictionary">
+                    <Frame Margin="0,4" Padding="14" CornerRadius="10">
+                        <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto,Auto" ColumnSpacing="10" RowSpacing="4">
+                            <!-- Name -->
+                            <Label Grid.Row="0" Grid.Column="0"
+                                   Text="{Binding Name}"
+                                   FontSize="16" FontAttributes="Bold" />
+
+                            <!-- Description -->
+                            <Label Grid.Row="1" Grid.Column="0"
+                                   Text="{Binding Description}"
+                                   FontSize="12"
+                                   TextColor="{StaticResource Gray500}"
+                                   LineBreakMode="TailTruncation" />
+
+                            <!-- Info -->
+                            <HorizontalStackLayout Grid.Row="2" Grid.Column="0" Spacing="12">
+                                <Label FontSize="11" TextColor="{StaticResource Gray400}">
+                                    <Label.FormattedText>
+                                        <FormattedString>
+                                            <Span Text="🌐 " />
+                                            <Span Text="{Binding Language}" />
+                                        </FormattedString>
+                                    </Label.FormattedText>
+                                </Label>
+                                <Label FontSize="11" TextColor="{StaticResource Gray400}">
+                                    <Label.FormattedText>
+                                        <FormattedString>
+                                            <Span Text="📝 " />
+                                            <Span Text="{Binding Words.Count}" />
+                                            <Span Text=" слов" />
+                                        </FormattedString>
+                                    </Label.FormattedText>
+                                </Label>
+                                <Label Text="🔒 Встроенный"
+                                       FontSize="11"
+                                       TextColor="{StaticResource Gray400}"
+                                       IsVisible="{Binding IsBuiltIn}" />
+                            </HorizontalStackLayout>
+
+                            <!-- Action Buttons -->
+                            <VerticalStackLayout Grid.Row="0" Grid.Column="1" Grid.RowSpan="3"
+                                                 VerticalOptions="Center" Spacing="6">
+                                <Button Text="✏️"
+                                        FontSize="14"
+                                        Padding="8,4"
+                                        CornerRadius="6"
+                                        BackgroundColor="#7C4DFF"
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:DictionaryListViewModel}}, Path=EditDictionaryCommand}"
+                                        CommandParameter="{Binding .}" />
+                                <Button Text="🗑️"
+                                        FontSize="14"
+                                        Padding="8,4"
+                                        CornerRadius="6"
+                                        BackgroundColor="{StaticResource ErrorRed}"
+                                        IsVisible="{Binding IsBuiltIn, Converter={StaticResource InvertBoolConverter}}"
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:DictionaryListViewModel}}, Path=DeleteDictionaryCommand}"
+                                        CommandParameter="{Binding .}" />
+                            </VerticalStackLayout>
+                        </Grid>
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <!-- Add Button -->
+        <Button Grid.Row="1"
+                Text="➕ Добавить словарь"
+                Command="{Binding AddDictionaryCommand}"
+                BackgroundColor="{StaticResource Primary}"
+                FontSize="16"
+                HeightRequest="50"
+                CornerRadius="10" />
+
+    </Grid>
+
+</ContentPage>

@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:CheckersGame.ViewModels"
+             xmlns:models="clr-namespace:CheckersGame.Models"
+             x:Class="CheckersGame.Views.ProfilesPage"
+             x:DataType="vm:ProfilesViewModel"
+             Title="Профили игроков">
+
+    <Grid RowDefinitions="*,Auto" Padding="15">
+
+        <!-- Список профилей -->
+        <CollectionView ItemsSource="{Binding Profiles}"
+                        IsVisible="{Binding IsEmpty, Converter={StaticResource InvertBoolConverter}}">
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="models:PlayerProfile">
+                    <Frame Padding="12" Margin="0,5" HasShadow="False">
+                        <Grid ColumnDefinitions="50,*,Auto" ColumnSpacing="12">
+                            <!-- Аватар -->
+                            <Frame Grid.Column="0"
+                                   WidthRequest="45"
+                                   HeightRequest="45"
+                                   CornerRadius="22"
+                                   Padding="0"
+                                   BackgroundColor="{Binding AvatarColor}"
+                                   HasShadow="False"
+                                   HorizontalOptions="Center"
+                                   VerticalOptions="Center">
+                                <Label Text="{Binding Name, StringFormat='{0:0}'}"
+                                       TextColor="White"
+                                       FontSize="18"
+                                       FontAttributes="Bold"
+                                       HorizontalOptions="Center"
+                                       VerticalOptions="Center" />
+                            </Frame>
+
+                            <!-- Информация -->
+                            <VerticalStackLayout Grid.Column="1" VerticalOptions="Center">
+                                <Label Text="{Binding Name}"
+                                       FontSize="16"
+                                       FontAttributes="Bold" />
+                                <HorizontalStackLayout Spacing="10">
+                                    <Label Text="{Binding Rating, StringFormat='Рейтинг: {0}'}"
+                                           FontSize="12"
+                                           TextColor="{StaticResource Gray400}" />
+                                    <Label Text="{Binding GamesPlayed, StringFormat='Игр: {0}'}"
+                                           FontSize="12"
+                                           TextColor="{StaticResource Gray400}" />
+                                </HorizontalStackLayout>
+                                <HorizontalStackLayout Spacing="8">
+                                    <Label Text="{Binding Wins, StringFormat='П:{0}'}"
+                                           FontSize="11"
+                                           TextColor="Green" />
+                                    <Label Text="{Binding Losses, StringFormat='П:{0}'}"
+                                           FontSize="11"
+                                           TextColor="Red" />
+                                    <Label Text="{Binding Draws, StringFormat='Н:{0}'}"
+                                           FontSize="11"
+                                           TextColor="{StaticResource Gray400}" />
+                                    <Label Text="{Binding WinRate, StringFormat='{0:F0}%'}"
+                                           FontSize="11"
+                                           FontAttributes="Bold" />
+                                </HorizontalStackLayout>
+                            </VerticalStackLayout>
+
+                            <!-- Кнопки действий -->
+                            <HorizontalStackLayout Grid.Column="2" Spacing="5" VerticalOptions="Center">
+                                <Button Text="✏"
+                                        FontSize="16"
+                                        WidthRequest="40"
+                                        HeightRequest="40"
+                                        Padding="0"
+                                        BackgroundColor="{StaticResource Secondary}"
+                                        TextColor="{StaticResource PrimaryDarkText}"
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ProfilesViewModel}}, Path=EditProfileCommand}"
+                                        CommandParameter="{Binding .}" />
+                                <Button Text="🗑"
+                                        FontSize="16"
+                                        WidthRequest="40"
+                                        HeightRequest="40"
+                                        Padding="0"
+                                        BackgroundColor="#F44336"
+                                        TextColor="White"
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ProfilesViewModel}}, Path=DeleteProfileCommand}"
+                                        CommandParameter="{Binding .}" />
+                            </HorizontalStackLayout>
+                        </Grid>
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <!-- Пустое состояние -->
+        <VerticalStackLayout IsVisible="{Binding IsEmpty}"
+                             VerticalOptions="Center"
+                             HorizontalOptions="Center"
+                             Spacing="10">
+            <Label Text="👤"
+                   FontSize="60"
+                   HorizontalOptions="Center" />
+            <Label Text="Нет профилей"
+                   FontSize="18"
+                   HorizontalOptions="Center"
+                   TextColor="{StaticResource Gray400}" />
+            <Label Text="Создайте профиль, чтобы начать играть"
+                   FontSize="14"
+                   HorizontalOptions="Center"
+                   TextColor="{StaticResource Gray400}" />
+        </VerticalStackLayout>
+
+        <!-- Кнопка создания -->
+        <Button Grid.Row="1"
+                Text="+ Создать профиль"
+                Command="{Binding CreateProfileCommand}"
+                FontSize="16"
+                HeightRequest="50"
+                Margin="0,10,0,0" />
+
+    </Grid>
+
+</ContentPage>

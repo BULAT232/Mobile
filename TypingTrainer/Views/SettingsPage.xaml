@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:TypingTrainer.ViewModels"
+             x:Class="TypingTrainer.Views.SettingsPage"
+             x:DataType="vm:SettingsViewModel"
+             Title="Настройки">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="16">
+
+            <!-- Font Size -->
+            <Frame Padding="16" CornerRadius="10">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="Размер шрифта" FontSize="16" FontAttributes="Bold" />
+                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                        <Label Grid.Column="0" Text="A" FontSize="12"
+                               VerticalOptions="Center" TextColor="{StaticResource Gray400}" />
+                        <Slider Grid.Column="1"
+                                Minimum="12" Maximum="36"
+                                Value="{Binding FontSize}"
+                                MinimumTrackColor="{StaticResource Primary}"
+                                MaximumTrackColor="{StaticResource Gray200}" />
+                        <Label Grid.Column="2" Text="A" FontSize="24"
+                               VerticalOptions="Center" TextColor="{StaticResource Gray400}" />
+                    </Grid>
+                    <Label Text="{Binding FontSize, StringFormat='Текущий размер: {0}'}"
+                           FontSize="12" TextColor="{StaticResource Gray500}"
+                           HorizontalOptions="Center" />
+
+                    <!-- Preview -->
+                    <Frame Padding="12" BackgroundColor="#FAFAFA" CornerRadius="8">
+                        <Label Text="{Binding PreviewText}"
+                               FontSize="{Binding FontSize}"
+                               FontFamily="monospace"
+                               HorizontalOptions="Center" />
+                    </Frame>
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Word Count -->
+            <Frame Padding="16" CornerRadius="10">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="Количество слов в тренировке" FontSize="16" FontAttributes="Bold" />
+                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                        <Label Grid.Column="0" Text="5"
+                               FontSize="12" VerticalOptions="Center"
+                               TextColor="{StaticResource Gray400}" />
+                        <Slider Grid.Column="1"
+                                Minimum="5" Maximum="100"
+                                Value="{Binding WordCount}"
+                                MinimumTrackColor="{StaticResource Primary}"
+                                MaximumTrackColor="{StaticResource Gray200}" />
+                        <Label Grid.Column="2" Text="100"
+                               FontSize="12" VerticalOptions="Center"
+                               TextColor="{StaticResource Gray400}" />
+                    </Grid>
+                    <Label Text="{Binding WordCount, StringFormat='Слов: {0}'}"
+                           FontSize="12" TextColor="{StaticResource Gray500}"
+                           HorizontalOptions="Center" />
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Display Options -->
+            <Frame Padding="16" CornerRadius="10">
+                <VerticalStackLayout Spacing="12">
+                    <Label Text="Отображение" FontSize="16" FontAttributes="Bold" />
+
+                    <Grid ColumnDefinitions="*,Auto">
+                        <Label Grid.Column="0" Text="Показывать таймер"
+                               FontSize="14" VerticalOptions="Center" />
+                        <Switch Grid.Column="1"
+                                IsToggled="{Binding ShowTimer}"
+                                OnColor="{StaticResource Primary}" />
+                    </Grid>
+
+                    <BoxView HeightRequest="1" Color="{StaticResource Gray100}" />
+
+                    <Grid ColumnDefinitions="*,Auto">
+                        <Label Grid.Column="0" Text="Показывать WPM"
+                               FontSize="14" VerticalOptions="Center" />
+                        <Switch Grid.Column="1"
+                                IsToggled="{Binding ShowWPM}"
+                                OnColor="{StaticResource Primary}" />
+                    </Grid>
+
+                    <BoxView HeightRequest="1" Color="{StaticResource Gray100}" />
+
+                    <Grid ColumnDefinitions="*,Auto">
+                        <Label Grid.Column="0" Text="Показывать точность"
+                               FontSize="14" VerticalOptions="Center" />
+                        <Switch Grid.Column="1"
+                                IsToggled="{Binding ShowAccuracy}"
+                                OnColor="{StaticResource Primary}" />
+                    </Grid>
+
+                    <BoxView HeightRequest="1" Color="{StaticResource Gray100}" />
+
+                    <Grid ColumnDefinitions="*,Auto">
+                        <Label Grid.Column="0" Text="Подсвечивать ошибки"
+                               FontSize="14" VerticalOptions="Center" />
+                        <Switch Grid.Column="1"
+                                IsToggled="{Binding HighlightErrors}"
+                                OnColor="{StaticResource Primary}" />
+                    </Grid>
+
+                    <BoxView HeightRequest="1" Color="{StaticResource Gray100}" />
+
+                    <Grid ColumnDefinitions="*,Auto">
+                        <Label Grid.Column="0" Text="Звуковые эффекты"
+                               FontSize="14" VerticalOptions="Center" />
+                        <Switch Grid.Column="1"
+                                IsToggled="{Binding SoundEnabled}"
+                                OnColor="{StaticResource Primary}" />
+                    </Grid>
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Action Buttons -->
+            <Button Text="💾 Сохранить настройки"
+                    Command="{Binding SaveSettingsCommand}"
+                    BackgroundColor="{StaticResource Primary}"
+                    FontSize="16"
+                    HeightRequest="50"
+                    CornerRadius="10" />
+
+            <Button Text="🔄 Сбросить по умолчанию"
+                    Command="{Binding ResetSettingsCommand}"
+                    BackgroundColor="#FF7043"
+                    FontSize="14"
+                    CornerRadius="10" />
+
+            <!-- App Info -->
+            <Frame Padding="12" BackgroundColor="#F5F5F5" CornerRadius="8">
+                <VerticalStackLayout HorizontalOptions="Center" Spacing="4">
+                    <Label Text="Тренажёр набора текста v1.0"
+                           FontSize="12" TextColor="{StaticResource Gray400}"
+                           HorizontalOptions="Center" />
+                    <Label Text="Разработано на .NET MAUI"
+                           FontSize="11" TextColor="{StaticResource Gray300}"
+                           HorizontalOptions="Center" />
+                </VerticalStackLayout>
+            </Frame>
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

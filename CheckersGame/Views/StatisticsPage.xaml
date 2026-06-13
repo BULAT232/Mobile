@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:CheckersGame.ViewModels"
+             xmlns:models="clr-namespace:CheckersGame.Models"
+             x:Class="CheckersGame.Views.StatisticsPage"
+             x:DataType="vm:StatisticsViewModel"
+             Title="Статистика">
+
+    <ScrollView>
+        <VerticalStackLayout Spacing="15" Padding="15">
+
+            <!-- Общая статистика -->
+            <Label Text="Общая статистика"
+                   FontSize="20"
+                   FontAttributes="Bold" />
+
+            <Frame Padding="15">
+                <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto,Auto" RowSpacing="10" ColumnSpacing="15">
+                    <VerticalStackLayout>
+                        <Label Text="{Binding TotalGames}"
+                               FontSize="24"
+                               FontAttributes="Bold"
+                               TextColor="{StaticResource Primary}" />
+                        <Label Text="Всего игр"
+                               FontSize="12"
+                               TextColor="{StaticResource Gray400}" />
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout Grid.Column="1">
+                        <Label Text="{Binding DrawCount}"
+                               FontSize="24"
+                               FontAttributes="Bold"
+                               TextColor="{StaticResource Primary}" />
+                        <Label Text="Ничьих"
+                               FontSize="12"
+                               TextColor="{StaticResource Gray400}" />
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout Grid.Row="1">
+                        <Label Text="{Binding AverageDuration}"
+                               FontSize="24"
+                               FontAttributes="Bold"
+                               TextColor="{StaticResource Primary}" />
+                        <Label Text="Средняя длительность"
+                               FontSize="12"
+                               TextColor="{StaticResource Gray400}" />
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout Grid.Row="1" Grid.Column="1">
+                        <Label Text="{Binding TotalMoves}"
+                               FontSize="24"
+                               FontAttributes="Bold"
+                               TextColor="{StaticResource Primary}" />
+                        <Label Text="Всего ходов"
+                               FontSize="12"
+                               TextColor="{StaticResource Gray400}" />
+                    </VerticalStackLayout>
+                </Grid>
+            </Frame>
+
+            <!-- По типам игр -->
+            <Label Text="По типам игр"
+                   FontSize="18"
+                   FontAttributes="Bold"
+                   Margin="0,10,0,0" />
+
+            <Frame Padding="15">
+                <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto,Auto,Auto" RowSpacing="8">
+                    <Label Text="Русские шашки" />
+                    <Label Grid.Column="1" Text="{Binding RussianGames}" FontAttributes="Bold" />
+
+                    <Label Grid.Row="1" Text="Международные шашки" />
+                    <Label Grid.Row="1" Grid.Column="1" Text="{Binding InternationalGames}" FontAttributes="Bold" />
+
+                    <Label Grid.Row="2" Text="Бразильские шашки" />
+                    <Label Grid.Row="2" Grid.Column="1" Text="{Binding BrazilianGames}" FontAttributes="Bold" />
+
+                    <Label Grid.Row="3" Text="Поддавки" />
+                    <Label Grid.Row="3" Grid.Column="1" Text="{Binding GiveawayGames}" FontAttributes="Bold" />
+                </Grid>
+            </Frame>
+
+            <!-- Рейтинг игроков -->
+            <Label Text="Рейтинг игроков"
+                   FontSize="18"
+                   FontAttributes="Bold"
+                   Margin="0,10,0,0" />
+
+            <CollectionView ItemsSource="{Binding PlayerRankings}"
+                            SelectionMode="Single"
+                            SelectionChangedCommand="{Binding SelectPlayerCommand}"
+                            SelectionChangedCommandParameter="{Binding Source={RelativeSource Self}, Path=SelectedItem}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="models:PlayerProfile">
+                        <Frame Padding="10" Margin="0,3" HasShadow="False">
+                            <Grid ColumnDefinitions="30,*,Auto">
+                                <Label Text="🏆"
+                                       FontSize="18"
+                                       VerticalOptions="Center" />
+                                <VerticalStackLayout Grid.Column="1" VerticalOptions="Center">
+                                    <Label Text="{Binding Name}"
+                                           FontSize="14"
+                                           FontAttributes="Bold" />
+                                    <Label Text="{Binding GamesPlayed, StringFormat='Игр: {0}'}"
+                                           FontSize="11"
+                                           TextColor="{StaticResource Gray400}" />
+                                </VerticalStackLayout>
+                                <Label Grid.Column="2"
+                                       Text="{Binding Rating}"
+                                       FontSize="20"
+                                       FontAttributes="Bold"
+                                       TextColor="{StaticResource Primary}"
+                                       VerticalOptions="Center" />
+                            </Grid>
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <!-- Детали выбранного игрока -->
+            <Frame Padding="15"
+                   IsVisible="{Binding HasPlayerSelected}"
+                   Margin="0,5,0,0">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="{Binding SelectedPlayer.Name, StringFormat='Статистика: {0}'}"
+                           FontSize="16"
+                           FontAttributes="Bold" />
+
+                    <Grid ColumnDefinitions="*,*,*" ColumnSpacing="10">
+                        <VerticalStackLayout HorizontalOptions="Center">
+                            <Label Text="{Binding PlayerWins}"
+                                   FontSize="20"
+                                   FontAttributes="Bold"
+                                   TextColor="Green"
+                                   HorizontalOptions="Center" />
+                            <Label Text="Побед"
+                                   FontSize="11"
+                                   HorizontalOptions="Center"
+                                   TextColor="{StaticResource Gray400}" />
+                        </VerticalStackLayout>
+                        <VerticalStackLayout HorizontalOptions="Center">
+                            <Label Text="{Binding PlayerLosses}"
+                                   FontSize="20"
+                                   FontAttributes="Bold"
+                                   TextColor="Red"
+                                   HorizontalOptions="Center" />
+                            <Label Text="Поражений"
+                                   FontSize="11"
+                                   HorizontalOptions="Center"
+                                   TextColor="{StaticResource Gray400}" />
+                        </VerticalStackLayout>
+                        <VerticalStackLayout HorizontalOptions="Center">
+                            <Label Text="{Binding PlayerDraws}"
+                                   FontSize="20"
+                                   FontAttributes="Bold"
+                                   HorizontalOptions="Center" />
+                            <Label Text="Ничьих"
+                                   FontSize="11"
+                                   HorizontalOptions="Center"
+                                   TextColor="{StaticResource Gray400}" />
+                        </VerticalStackLayout>
+                    </Grid>
+
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
+                        <VerticalStackLayout HorizontalOptions="Center">
+                            <Label Text="{Binding PlayerWinRate}"
+                                   FontSize="16"
+                                   FontAttributes="Bold"
+                                   HorizontalOptions="Center" />
+                            <Label Text="Процент побед"
+                                   FontSize="11"
+                                   HorizontalOptions="Center"
+                                   TextColor="{StaticResource Gray400}" />
+                        </VerticalStackLayout>
+                        <VerticalStackLayout HorizontalOptions="Center">
+                            <Label Text="{Binding PlayerBestStreak}"
+                                   FontSize="16"
+                                   FontAttributes="Bold"
+                                   HorizontalOptions="Center" />
+                            <Label Text="Лучшая серия"
+                                   FontSize="11"
+                                   HorizontalOptions="Center"
+                                   TextColor="{StaticResource Gray400}" />
+                        </VerticalStackLayout>
+                    </Grid>
+
+                    <HorizontalStackLayout HorizontalOptions="Center" Spacing="5">
+                        <Label Text="Захвачено шашек:"
+                               FontSize="13" />
+                        <Label Text="{Binding PlayerTotalCaptured}"
+                               FontSize="13"
+                               FontAttributes="Bold" />
+                    </HorizontalStackLayout>
+                </VerticalStackLayout>
+            </Frame>
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

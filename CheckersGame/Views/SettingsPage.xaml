@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:CheckersGame.ViewModels"
+             x:Class="CheckersGame.Views.SettingsPage"
+             x:DataType="vm:SettingsViewModel"
+             Title="Настройки">
+
+    <ScrollView>
+        <VerticalStackLayout Spacing="15" Padding="20">
+
+            <Label Text="Настройки игры"
+                   FontSize="20"
+                   FontAttributes="Bold" />
+
+            <!-- Тема доски -->
+            <Frame Padding="15">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="Тема доски"
+                           FontSize="16"
+                           FontAttributes="Bold" />
+                    <Picker ItemsSource="{Binding ThemeNames}"
+                            SelectedIndex="{Binding SelectedThemeIndex}" />
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Подсказки -->
+            <Frame Padding="15">
+                <Grid ColumnDefinitions="*,Auto">
+                    <VerticalStackLayout>
+                        <Label Text="Подсказки ходов"
+                               FontSize="16"
+                               FontAttributes="Bold" />
+                        <Label Text="Подсвечивать допустимые ходы при выборе шашки"
+                               FontSize="12"
+                               TextColor="{StaticResource Gray400}" />
+                    </VerticalStackLayout>
+                    <Switch Grid.Column="1"
+                            IsToggled="{Binding ShowHints}"
+                            VerticalOptions="Center" />
+                </Grid>
+            </Frame>
+
+            <!-- Таймер -->
+            <Frame Padding="15">
+                <VerticalStackLayout Spacing="10">
+                    <Grid ColumnDefinitions="*,Auto">
+                        <VerticalStackLayout>
+                            <Label Text="Шахматные часы"
+                                   FontSize="16"
+                                   FontAttributes="Bold" />
+                            <Label Text="Включить таймер по умолчанию"
+                                   FontSize="12"
+                                   TextColor="{StaticResource Gray400}" />
+                        </VerticalStackLayout>
+                        <Switch Grid.Column="1"
+                                IsToggled="{Binding EnableTimer}"
+                                VerticalOptions="Center" />
+                    </Grid>
+
+                    <HorizontalStackLayout Spacing="10"
+                                           IsVisible="{Binding EnableTimer}">
+                        <Label Text="Время по умолчанию (мин):"
+                               VerticalOptions="Center"
+                               FontSize="14" />
+                        <Picker ItemsSource="{Binding TimerOptions}"
+                                SelectedItem="{Binding DefaultTimerMinutes}"
+                                WidthRequest="80" />
+                    </HorizontalStackLayout>
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Звук -->
+            <Frame Padding="15">
+                <Grid ColumnDefinitions="*,Auto">
+                    <VerticalStackLayout>
+                        <Label Text="Звуковые эффекты"
+                               FontSize="16"
+                               FontAttributes="Bold" />
+                        <Label Text="Звуки при ходах и взятиях"
+                               FontSize="12"
+                               TextColor="{StaticResource Gray400}" />
+                    </VerticalStackLayout>
+                    <Switch Grid.Column="1"
+                            IsToggled="{Binding EnableSound}"
+                            VerticalOptions="Center" />
+                </Grid>
+            </Frame>
+
+            <!-- Кнопки -->
+            <Button Text="💾  Сохранить настройки"
+                    Command="{Binding SaveSettingsCommand}"
+                    FontSize="16"
+                    HeightRequest="50"
+                    Margin="0,10,0,0" />
+
+            <Button Text="↩  Сбросить по умолчанию"
+                    Command="{Binding ResetSettingsCommand}"
+                    FontSize="14"
+                    HeightRequest="44"
+                    BackgroundColor="{StaticResource Secondary}"
+                    TextColor="{StaticResource PrimaryDarkText}" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

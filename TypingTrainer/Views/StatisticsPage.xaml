@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:TypingTrainer.ViewModels"
+             xmlns:models="clr-namespace:TypingTrainer.Models"
+             x:Class="TypingTrainer.Views.StatisticsPage"
+             x:DataType="vm:StatisticsViewModel"
+             Title="Статистика">
+
+    <Grid RowDefinitions="Auto,*,Auto" Padding="16" RowSpacing="12">
+
+        <!-- Summary Cards -->
+        <VerticalStackLayout Grid.Row="0" Spacing="10">
+            <!-- Top Row -->
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
+                <Frame Grid.Column="0" Padding="14" BackgroundColor="#F3E5F5" CornerRadius="10">
+                    <VerticalStackLayout HorizontalOptions="Center" Spacing="4">
+                        <Label Text="{Binding BestWPM, StringFormat='{0:F1}'}"
+                               FontSize="26" FontAttributes="Bold"
+                               TextColor="{StaticResource Primary}"
+                               HorizontalOptions="Center" />
+                        <Label Text="🏆 Лучший WPM" FontSize="11"
+                               TextColor="{StaticResource Gray500}"
+                               HorizontalOptions="Center" />
+                    </VerticalStackLayout>
+                </Frame>
+                <Frame Grid.Column="1" Padding="14" BackgroundColor="#E8F5E9" CornerRadius="10">
+                    <VerticalStackLayout HorizontalOptions="Center" Spacing="4">
+                        <Label Text="{Binding AverageWPM, StringFormat='{0:F1}'}"
+                               FontSize="26" FontAttributes="Bold"
+                               TextColor="#4CAF50"
+                               HorizontalOptions="Center" />
+                        <Label Text="📊 Средний WPM" FontSize="11"
+                               TextColor="{StaticResource Gray500}"
+                               HorizontalOptions="Center" />
+                    </VerticalStackLayout>
+                </Frame>
+            </Grid>
+
+            <!-- Bottom Row -->
+            <Grid ColumnDefinitions="*,*,*" ColumnSpacing="10">
+                <Frame Grid.Column="0" Padding="10" BackgroundColor="#E3F2FD" CornerRadius="10">
+                    <VerticalStackLayout HorizontalOptions="Center" Spacing="2">
+                        <Label Text="{Binding AverageAccuracy, StringFormat='{0:F1}%'}"
+                               FontSize="18" FontAttributes="Bold"
+                               TextColor="#2196F3"
+                               HorizontalOptions="Center" />
+                        <Label Text="Точность" FontSize="10"
+                               TextColor="{StaticResource Gray500}"
+                               HorizontalOptions="Center" />
+                    </VerticalStackLayout>
+                </Frame>
+                <Frame Grid.Column="1" Padding="10" BackgroundColor="#FFF3E0" CornerRadius="10">
+                    <VerticalStackLayout HorizontalOptions="Center" Spacing="2">
+                        <Label Text="{Binding TotalSessions}"
+                               FontSize="18" FontAttributes="Bold"
+                               TextColor="#FF9800"
+                               HorizontalOptions="Center" />
+                        <Label Text="Сессий" FontSize="10"
+                               TextColor="{StaticResource Gray500}"
+                               HorizontalOptions="Center" />
+                    </VerticalStackLayout>
+                </Frame>
+                <Frame Grid.Column="2" Padding="10" BackgroundColor="#FCE4EC" CornerRadius="10">
+                    <VerticalStackLayout HorizontalOptions="Center" Spacing="2">
+                        <Label Text="{Binding TotalPracticeMinutes, StringFormat='{0:F0} мин'}"
+                               FontSize="16" FontAttributes="Bold"
+                               TextColor="#E91E63"
+                               HorizontalOptions="Center" />
+                        <Label Text="Практика" FontSize="10"
+                               TextColor="{StaticResource Gray500}"
+                               HorizontalOptions="Center" />
+                    </VerticalStackLayout>
+                </Frame>
+            </Grid>
+        </VerticalStackLayout>
+
+        <!-- Recent Sessions List -->
+        <VerticalStackLayout Grid.Row="1" Spacing="8">
+            <Label Text="Последние тренировки" FontSize="16" FontAttributes="Bold"
+                   IsVisible="{Binding HasData}" />
+
+            <CollectionView ItemsSource="{Binding RecentResults}"
+                            IsVisible="{Binding HasData}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="models:SessionResult">
+                        <Frame Margin="0,2" Padding="12" CornerRadius="8">
+                            <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto" ColumnSpacing="10" RowSpacing="4">
+                                <Label Grid.Row="0" Grid.Column="0"
+                                       Text="{Binding DictionaryName}"
+                                       FontSize="14" FontAttributes="Bold" />
+                                <Label Grid.Row="0" Grid.Column="1"
+                                       Text="{Binding Date, StringFormat='{0:dd.MM.yyyy HH:mm}'}"
+                                       FontSize="11"
+                                       TextColor="{StaticResource Gray400}"
+                                       VerticalOptions="Center" />
+                                <HorizontalStackLayout Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Spacing="16">
+                                    <Label FontSize="12" TextColor="#4CAF50">
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <Span Text="WPM: " />
+                                                <Span Text="{Binding WPM, StringFormat='{0:F0}'}" FontAttributes="Bold" />
+                                            </FormattedString>
+                                        </Label.FormattedText>
+                                    </Label>
+                                    <Label FontSize="12" TextColor="#2196F3">
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <Span Text="Точность: " />
+                                                <Span Text="{Binding Accuracy, StringFormat='{0:F0}%'}" FontAttributes="Bold" />
+                                            </FormattedString>
+                                        </Label.FormattedText>
+                                    </Label>
+                                    <Label FontSize="12" TextColor="{StaticResource ErrorRed}">
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <Span Text="Ошибки: " />
+                                                <Span Text="{Binding ErrorCount}" FontAttributes="Bold" />
+                                            </FormattedString>
+                                        </Label.FormattedText>
+                                    </Label>
+                                </HorizontalStackLayout>
+                            </Grid>
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <!-- No Data Message -->
+            <VerticalStackLayout IsVisible="{Binding HasData, Converter={StaticResource InvertBoolConverter}}"
+                                 HorizontalOptions="Center" VerticalOptions="Center" Spacing="10"
+                                 Padding="0,40">
+                <Label Text="📊" FontSize="48" HorizontalOptions="Center" />
+                <Label Text="Пока нет данных" FontSize="18"
+                       TextColor="{StaticResource Gray400}"
+                       HorizontalOptions="Center" />
+                <Label Text="Пройдите хотя бы одну тренировку" FontSize="13"
+                       TextColor="{StaticResource Gray300}"
+                       HorizontalOptions="Center" />
+            </VerticalStackLayout>
+        </VerticalStackLayout>
+
+        <!-- Clear Button -->
+        <Button Grid.Row="2"
+                Text="🗑️ Очистить статистику"
+                Command="{Binding ClearStatisticsCommand}"
+                BackgroundColor="{StaticResource ErrorRed}"
+                FontSize="14"
+                CornerRadius="10"
+                IsVisible="{Binding HasData}" />
+
+    </Grid>
+
+</ContentPage>

@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:TypingTrainer.ViewModels"
+             x:Class="TypingTrainer.Views.DictionaryEditPage"
+             x:DataType="vm:DictionaryEditViewModel"
+             Title="{Binding PageTitle}">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="16">
+
+            <!-- Name -->
+            <VerticalStackLayout Spacing="4">
+                <Label Text="Название словаря" FontSize="14" FontAttributes="Bold" />
+                <Entry Text="{Binding Name}"
+                       Placeholder="Введите название..."
+                       IsEnabled="{Binding IsBuiltIn, Converter={StaticResource InvertBoolConverter}}" />
+            </VerticalStackLayout>
+
+            <!-- Description -->
+            <VerticalStackLayout Spacing="4">
+                <Label Text="Описание" FontSize="14" FontAttributes="Bold" />
+                <Entry Text="{Binding Description}"
+                       Placeholder="Краткое описание словаря..."
+                       IsEnabled="{Binding IsBuiltIn, Converter={StaticResource InvertBoolConverter}}" />
+            </VerticalStackLayout>
+
+            <!-- Language -->
+            <VerticalStackLayout Spacing="4">
+                <Label Text="Язык" FontSize="14" FontAttributes="Bold" />
+                <Picker SelectedItem="{Binding Language}"
+                        IsEnabled="{Binding IsBuiltIn, Converter={StaticResource InvertBoolConverter}}">
+                    <Picker.ItemsSource>
+                        <x:Array Type="{x:Type x:String}">
+                            <x:String>ru</x:String>
+                            <x:String>en</x:String>
+                        </x:Array>
+                    </Picker.ItemsSource>
+                </Picker>
+            </VerticalStackLayout>
+
+            <!-- Word Count -->
+            <Frame Padding="10" BackgroundColor="#E3F2FD" CornerRadius="8">
+                <Label FontSize="14" TextColor="#1565C0">
+                    <Label.FormattedText>
+                        <FormattedString>
+                            <Span Text="Количество слов: " />
+                            <Span Text="{Binding WordCount}" FontAttributes="Bold" />
+                        </FormattedString>
+                    </Label.FormattedText>
+                </Label>
+            </Frame>
+
+            <!-- Words Editor -->
+            <VerticalStackLayout Spacing="4">
+                <Label Text="Слова (каждое слово на новой строке)" FontSize="14" FontAttributes="Bold" />
+                <Frame Padding="4" CornerRadius="8" BorderColor="{StaticResource Gray200}">
+                    <Editor Text="{Binding WordsText}"
+                            Placeholder="Введите слова, каждое на новой строке..."
+                            HeightRequest="300"
+                            FontSize="14"
+                            IsEnabled="{Binding IsBuiltIn, Converter={StaticResource InvertBoolConverter}}"
+                            AutoSize="TextChanges" />
+                </Frame>
+            </VerticalStackLayout>
+
+            <!-- Built-in Warning -->
+            <Frame Padding="10" BackgroundColor="#FFF3E0" CornerRadius="8"
+                   IsVisible="{Binding IsBuiltIn}">
+                <Label Text="⚠️ Это встроенный словарь. Его нельзя редактировать."
+                       FontSize="13" TextColor="#E65100" />
+            </Frame>
+
+            <!-- Action Buttons -->
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="10"
+                  IsVisible="{Binding IsBuiltIn, Converter={StaticResource InvertBoolConverter}}">
+                <Button Grid.Column="0"
+                        Text="💾 Сохранить"
+                        Command="{Binding SaveCommand}"
+                        BackgroundColor="{StaticResource Primary}"
+                        CornerRadius="10" />
+                <Button Grid.Column="1"
+                        Text="❌ Отмена"
+                        Command="{Binding CancelCommand}"
+                        BackgroundColor="{StaticResource Gray500}"
+                        CornerRadius="10" />
+            </Grid>
+
+            <Button Text="◀ Назад"
+                    Command="{Binding CancelCommand}"
+                    BackgroundColor="{StaticResource Gray400}"
+                    CornerRadius="10"
+                    IsVisible="{Binding IsBuiltIn}" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

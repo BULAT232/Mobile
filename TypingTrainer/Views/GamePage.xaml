@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:TypingTrainer.ViewModels"
+             x:Class="TypingTrainer.Views.GamePage"
+             x:DataType="vm:GameViewModel"
+             Title="{Binding DictionaryName}"
+             Shell.NavBarIsVisible="True">
+
+    <Grid RowDefinitions="Auto,*,Auto" Padding="16" RowSpacing="10">
+
+        <!-- Top Stats Bar -->
+        <Frame Grid.Row="0" Padding="10" BackgroundColor="#F5F5F5" CornerRadius="10">
+            <Grid ColumnDefinitions="*,*,*,*" ColumnSpacing="8">
+                <VerticalStackLayout Grid.Column="0" HorizontalOptions="Center">
+                    <Label Text="{Binding ElapsedTime}"
+                           FontSize="18" FontAttributes="Bold"
+                           TextColor="{StaticResource Primary}"
+                           HorizontalOptions="Center" />
+                    <Label Text="Время" FontSize="10"
+                           TextColor="{StaticResource Gray500}"
+                           HorizontalOptions="Center" />
+                </VerticalStackLayout>
+                <VerticalStackLayout Grid.Column="1" HorizontalOptions="Center">
+                    <Label Text="{Binding CurrentWPM, StringFormat='{0:F0}'}"
+                           FontSize="18" FontAttributes="Bold"
+                           TextColor="#4CAF50"
+                           HorizontalOptions="Center" />
+                    <Label Text="WPM" FontSize="10"
+                           TextColor="{StaticResource Gray500}"
+                           HorizontalOptions="Center" />
+                </VerticalStackLayout>
+                <VerticalStackLayout Grid.Column="2" HorizontalOptions="Center">
+                    <Label Text="{Binding CurrentAccuracy, StringFormat='{0:F0}%'}"
+                           FontSize="18" FontAttributes="Bold"
+                           TextColor="#2196F3"
+                           HorizontalOptions="Center" />
+                    <Label Text="Точность" FontSize="10"
+                           TextColor="{StaticResource Gray500}"
+                           HorizontalOptions="Center" />
+                </VerticalStackLayout>
+                <VerticalStackLayout Grid.Column="3" HorizontalOptions="Center">
+                    <Label Text="{Binding ErrorCount}"
+                           FontSize="18" FontAttributes="Bold"
+                           TextColor="{StaticResource ErrorRed}"
+                           HorizontalOptions="Center" />
+                    <Label Text="Ошибки" FontSize="10"
+                           TextColor="{StaticResource Gray500}"
+                           HorizontalOptions="Center" />
+                </VerticalStackLayout>
+            </Grid>
+        </Frame>
+
+        <!-- Main Content Area -->
+        <Grid Grid.Row="1">
+            <!-- Game Not Started / Active -->
+            <VerticalStackLayout IsVisible="{Binding IsGameCompleted, Converter={StaticResource InvertBoolConverter}}"
+                                 Spacing="16">
+
+                <!-- Progress Bar -->
+                <ProgressBar Progress="{Binding ProgressValue}"
+                             ProgressColor="{StaticResource Primary}"
+                             HeightRequest="6" />
+
+                <!-- Target Text Display -->
+                <Frame Padding="16" BackgroundColor="#FAFAFA" CornerRadius="10" MinimumHeightRequest="120">
+                    <Label x:Name="TargetTextLabel"
+                           FontSize="{Binding FontSize}"
+                           FontFamily="monospace"
+                           LineBreakMode="WordWrap" />
+                </Frame>
+
+                <!-- Instruction Label -->
+                <Label Text="Начните печатать текст выше..."
+                       IsVisible="{Binding IsGameNotStarted}"
+                       FontSize="14"
+                       TextColor="{StaticResource Gray400}"
+                       HorizontalOptions="Center" />
+
+                <!-- Input Entry -->
+                <Frame Padding="4" CornerRadius="10" BorderColor="{StaticResource Primary}">
+                    <Entry x:Name="InputEntry"
+                           Placeholder="Начните печатать здесь..."
+                           FontSize="{Binding FontSize}"
+                           FontFamily="monospace"
+                           Text="{Binding TypedText}"
+                           IsEnabled="{Binding IsGameCompleted, Converter={StaticResource InvertBoolConverter}}"
+                           Keyboard="Default" />
+                </Frame>
+            </VerticalStackLayout>
+
+            <!-- Game Completed Results -->
+            <ScrollView IsVisible="{Binding IsGameCompleted}">
+                <VerticalStackLayout Spacing="16" Padding="0,10">
+                    <Frame BackgroundColor="#E8F5E9" Padding="20" CornerRadius="12">
+                        <VerticalStackLayout Spacing="8" HorizontalOptions="Center">
+                            <Label Text="🎉 Тренировка завершена!"
+                                   FontSize="24" FontAttributes="Bold"
+                                   TextColor="#2E7D32"
+                                   HorizontalOptions="Center" />
+                        </VerticalStackLayout>
+                    </Frame>
+
+                    <!-- Results Grid -->
+                    <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto,Auto" ColumnSpacing="10" RowSpacing="10">
+                        <Frame Grid.Column="0" Grid.Row="0" Padding="16" BackgroundColor="#F3E5F5">
+                            <VerticalStackLayout HorizontalOptions="Center" Spacing="4">
+                                <Label Text="{Binding ResultWPM, StringFormat='{0:F1}'}"
+                                       FontSize="28" FontAttributes="Bold"
+                                       TextColor="{StaticResource Primary}"
+                                       HorizontalOptions="Center" />
+                                <Label Text="Слов/мин (WPM)" FontSize="12"
+                                       TextColor="{StaticResource Gray500}"
+                                       HorizontalOptions="Center" />
+                            </VerticalStackLayout>
+                        </Frame>
+                        <Frame Grid.Column="1" Grid.Row="0" Padding="16" BackgroundColor="#E8F5E9">
+                            <VerticalStackLayout HorizontalOptions="Center" Spacing="4">
+                                <Label Text="{Binding ResultCPM, StringFormat='{0:F1}'}"
+                                       FontSize="28" FontAttributes="Bold"
+                                       TextColor="#4CAF50"
+                                       HorizontalOptions="Center" />
+                                <Label Text="Симв/мин (CPM)" FontSize="12"
+                                       TextColor="{StaticResource Gray500}"
+                                       HorizontalOptions="Center" />
+                            </VerticalStackLayout>
+                        </Frame>
+                        <Frame Grid.Column="0" Grid.Row="1" Padding="16" BackgroundColor="#E3F2FD">
+                            <VerticalStackLayout HorizontalOptions="Center" Spacing="4">
+                                <Label Text="{Binding ResultAccuracy, StringFormat='{0:F1}%'}"
+                                       FontSize="28" FontAttributes="Bold"
+                                       TextColor="#2196F3"
+                                       HorizontalOptions="Center" />
+                                <Label Text="Точность" FontSize="12"
+                                       TextColor="{StaticResource Gray500}"
+                                       HorizontalOptions="Center" />
+                            </VerticalStackLayout>
+                        </Frame>
+                        <Frame Grid.Column="1" Grid.Row="1" Padding="16" BackgroundColor="#FFF3E0">
+                            <VerticalStackLayout HorizontalOptions="Center" Spacing="4">
+                                <Label Text="{Binding ResultTime}"
+                                       FontSize="28" FontAttributes="Bold"
+                                       TextColor="#FF9800"
+                                       HorizontalOptions="Center" />
+                                <Label Text="Время" FontSize="12"
+                                       TextColor="{StaticResource Gray500}"
+                                       HorizontalOptions="Center" />
+                            </VerticalStackLayout>
+                        </Frame>
+                        <Frame Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2" Padding="16" BackgroundColor="#FFEBEE">
+                            <VerticalStackLayout HorizontalOptions="Center" Spacing="4">
+                                <Label Text="{Binding ResultErrors}"
+                                       FontSize="28" FontAttributes="Bold"
+                                       TextColor="{StaticResource ErrorRed}"
+                                       HorizontalOptions="Center" />
+                                <Label Text="Ошибок" FontSize="12"
+                                       TextColor="{StaticResource Gray500}"
+                                       HorizontalOptions="Center" />
+                            </VerticalStackLayout>
+                        </Frame>
+                    </Grid>
+
+                    <!-- Action Buttons -->
+                    <Button Text="🔄 Повторить"
+                            Command="{Binding RestartGameCommand}"
+                            BackgroundColor="{StaticResource Primary}"
+                            FontSize="18"
+                            HeightRequest="50"
+                            CornerRadius="10" />
+                    <Button Text="🏠 На главную"
+                            Command="{Binding GoBackCommand}"
+                            BackgroundColor="{StaticResource Gray500}"
+                            FontSize="16"
+                            HeightRequest="44"
+                            CornerRadius="10" />
+                </VerticalStackLayout>
+            </ScrollView>
+        </Grid>
+
+        <!-- Bottom Action Bar (during game) -->
+        <HorizontalStackLayout Grid.Row="2"
+                                IsVisible="{Binding IsGameCompleted, Converter={StaticResource InvertBoolConverter}}"
+                                HorizontalOptions="Center"
+                                Spacing="16">
+            <Button Text="🔄 Заново"
+                    Command="{Binding RestartGameCommand}"
+                    BackgroundColor="#FF7043"
+                    CornerRadius="8"
+                    FontSize="14"
+                    Padding="16,8" />
+            <Button Text="◀ Назад"
+                    Command="{Binding GoBackCommand}"
+                    BackgroundColor="{StaticResource Gray500}"
+                    CornerRadius="8"
+                    FontSize="14"
+                    Padding="16,8" />
+        </HorizontalStackLayout>
+
+    </Grid>
+
+</ContentPage>

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:CheckersGame.ViewModels"
+             x:Class="CheckersGame.Views.GameSetupPage"
+             x:DataType="vm:GameSetupViewModel"
+             Title="Новая игра">
+
+    <ScrollView>
+        <VerticalStackLayout Spacing="15" Padding="20">
+
+            <!-- Тип игры -->
+            <Label Text="Тип игры" FontSize="16" FontAttributes="Bold" />
+            <Picker Title="Выберите тип игры"
+                    ItemsSource="{Binding GameTypeNames}"
+                    SelectedIndex="{Binding SelectedGameTypeIndex}" />
+
+            <!-- Игрок 1 -->
+            <Label Text="Игрок 1 (белые)" FontSize="16" FontAttributes="Bold" Margin="0,10,0,0" />
+            <Picker Title="Выберите игрока"
+                    ItemsSource="{Binding Profiles}"
+                    SelectedItem="{Binding SelectedPlayer1}"
+                    ItemDisplayBinding="{Binding DisplayName}" />
+
+            <!-- Игрок 2 -->
+            <Label Text="Игрок 2 (чёрные)" FontSize="16" FontAttributes="Bold" Margin="0,10,0,0" />
+            <Picker Title="Выберите игрока"
+                    ItemsSource="{Binding Profiles}"
+                    SelectedItem="{Binding SelectedPlayer2}"
+                    ItemDisplayBinding="{Binding DisplayName}" />
+
+            <Button Text="+ Создать профиль"
+                    Command="{Binding CreateQuickProfileCommand}"
+                    BackgroundColor="{StaticResource Secondary}"
+                    TextColor="{StaticResource PrimaryDarkText}"
+                    FontSize="14" />
+
+            <!-- Таймер -->
+            <Frame Padding="15" Margin="0,10,0,0">
+                <VerticalStackLayout Spacing="10">
+                    <HorizontalStackLayout Spacing="10">
+                        <Label Text="Шахматные часы"
+                               FontSize="16"
+                               FontAttributes="Bold"
+                               VerticalOptions="Center" />
+                        <Switch IsToggled="{Binding EnableTimer}"
+                                VerticalOptions="Center" />
+                    </HorizontalStackLayout>
+
+                    <HorizontalStackLayout Spacing="10"
+                                           IsVisible="{Binding EnableTimer}">
+                        <Label Text="Время (мин):"
+                               VerticalOptions="Center" />
+                        <Picker ItemsSource="{Binding TimerOptions}"
+                                SelectedItem="{Binding TimerMinutes}"
+                                WidthRequest="80" />
+                    </HorizontalStackLayout>
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Кнопка старта -->
+            <Button Text="▶  Начать игру"
+                    Command="{Binding StartGameCommand}"
+                    FontSize="18"
+                    HeightRequest="55"
+                    Margin="0,20,0,0" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

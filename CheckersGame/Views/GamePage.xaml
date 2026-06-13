@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:CheckersGame.ViewModels"
+             x:Class="CheckersGame.Views.GamePage"
+             x:DataType="vm:GameViewModel"
+             Title="Игра"
+             Shell.NavBarIsVisible="False">
+
+    <Grid RowDefinitions="Auto,*,Auto" Padding="0">
+
+        <!-- Верхняя панель -->
+        <Grid Row="0" Padding="10,5" BackgroundColor="{StaticResource Primary}"
+              ColumnDefinitions="*,Auto">
+            <VerticalStackLayout>
+                <Label Text="{Binding GameTypeDisplay}"
+                       TextColor="White"
+                       FontSize="12" />
+                <Label Text="{Binding CurrentTurnText}"
+                       TextColor="White"
+                       FontSize="16"
+                       FontAttributes="Bold" />
+            </VerticalStackLayout>
+            <Button Grid.Column="1"
+                    Text="✕"
+                    Command="{Binding GoBackCommand}"
+                    BackgroundColor="Transparent"
+                    TextColor="White"
+                    FontSize="20"
+                    WidthRequest="44"
+                    HeightRequest="44" />
+        </Grid>
+
+        <!-- Основная область -->
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Spacing="5" Padding="5">
+
+                <!-- Информация об игроках и таймеры -->
+                <Grid ColumnDefinitions="*,*" Padding="5,5">
+                    <!-- Игрок 1 (белые) -->
+                    <Frame Grid.Column="0" Padding="8" Margin="2"
+                           BackgroundColor="{Binding IsPlayer1Turn, Converter={StaticResource BoolToColorConverter}, ConverterParameter=#E8F5E9|#FFFFFF}">
+                        <VerticalStackLayout>
+                            <Label Text="{Binding Player1Name}"
+                                   FontSize="14"
+                                   FontAttributes="Bold" />
+                            <HorizontalStackLayout Spacing="5">
+                                <Label Text="Шашек:"
+                                       FontSize="12"
+                                       TextColor="{StaticResource Gray400}" />
+                                <Label Text="{Binding WhitePiecesCount}"
+                                       FontSize="12"
+                                       FontAttributes="Bold" />
+                            </HorizontalStackLayout>
+                            <Label Text="{Binding Player1Timer}"
+                                   FontSize="16"
+                                   FontAttributes="Bold"
+                                   IsVisible="{Binding IsTimerEnabled}"
+                                   TextColor="{StaticResource Primary}" />
+                        </VerticalStackLayout>
+                    </Frame>
+
+                    <!-- Игрок 2 (чёрные) -->
+                    <Frame Grid.Column="1" Padding="8" Margin="2"
+                           BackgroundColor="{Binding IsPlayer1Turn, Converter={StaticResource InvertBoolConverter}}">
+                        <Frame.Triggers>
+                            <DataTrigger TargetType="Frame"
+                                         Binding="{Binding IsPlayer1Turn}"
+                                         Value="False">
+                                <Setter Property="BackgroundColor" Value="#E8F5E9" />
+                            </DataTrigger>
+                            <DataTrigger TargetType="Frame"
+                                         Binding="{Binding IsPlayer1Turn}"
+                                         Value="True">
+                                <Setter Property="BackgroundColor" Value="White" />
+                            </DataTrigger>
+                        </Frame.Triggers>
+                        <VerticalStackLayout>
+                            <Label Text="{Binding Player2Name}"
+                                   FontSize="14"
+                                   FontAttributes="Bold" />
+                            <HorizontalStackLayout Spacing="5">
+                                <Label Text="Шашек:"
+                                       FontSize="12"
+                                       TextColor="{StaticResource Gray400}" />
+                                <Label Text="{Binding BlackPiecesCount}"
+                                       FontSize="12"
+                                       FontAttributes="Bold" />
+                            </HorizontalStackLayout>
+                            <Label Text="{Binding Player2Timer}"
+                                   FontSize="16"
+                                   FontAttributes="Bold"
+                                   IsVisible="{Binding IsTimerEnabled}"
+                                   TextColor="{StaticResource Primary}" />
+                        </VerticalStackLayout>
+                    </Frame>
+                </Grid>
+
+                <!-- Доска — будет создана программно -->
+                <Border Stroke="{StaticResource Gray600}"
+                        StrokeThickness="2"
+                        HorizontalOptions="Center"
+                        Margin="0,5">
+                    <Grid x:Name="BoardGrid"
+                          HorizontalOptions="Center"
+                          VerticalOptions="Center" />
+                </Border>
+
+                <!-- Статус игры -->
+                <Label Text="{Binding GameStatusText}"
+                       FontSize="18"
+                       FontAttributes="Bold"
+                       HorizontalOptions="Center"
+                       TextColor="{StaticResource Primary}"
+                       IsVisible="{Binding IsGameOver}"
+                       Margin="0,5" />
+
+                <!-- Кнопки управления -->
+                <Grid ColumnDefinitions="*,*,*,*" Padding="5,5" ColumnSpacing="5">
+                    <Button Grid.Column="0"
+                            Text="↩"
+                            Command="{Binding UndoCommand}"
+                            IsEnabled="{Binding CanUndo}"
+                            FontSize="20"
+                            HeightRequest="44" />
+                    <Button Grid.Column="1"
+                            Text="↪"
+                            Command="{Binding RedoCommand}"
+                            IsEnabled="{Binding CanRedo}"
+                            FontSize="20"
+                            HeightRequest="44" />
+                    <Button Grid.Column="2"
+                            Text="🏳"
+                            Command="{Binding ResignCommand}"
+                            FontSize="20"
+                            HeightRequest="44"
+                            BackgroundColor="#F44336" />
+                    <Button Grid.Column="3"
+                            Text="½"
+                            Command="{Binding OfferDrawCommand}"
+                            FontSize="20"
+                            HeightRequest="44"
+                            BackgroundColor="#FF9800" />
+                </Grid>
+
+                <!-- Лог ходов -->
+                <Frame Padding="10" Margin="5,0">
+                    <VerticalStackLayout>
+                        <Label Text="История ходов"
+                               FontSize="14"
+                               FontAttributes="Bold"
+                               Margin="0,0,0,5" />
+                        <CollectionView ItemsSource="{Binding MoveLog}"
+                                        HeightRequest="120">
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate x:DataType="x:String">
+                                    <Label Text="{Binding .}"
+                                           FontSize="12"
+                                           FontFamily="OpenSansRegular"
+                                           Padding="2,1" />
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+                    </VerticalStackLayout>
+                </Frame>
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+    </Grid>
+
+</ContentPage>

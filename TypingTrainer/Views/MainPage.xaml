@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:TypingTrainer.ViewModels"
+             x:Class="TypingTrainer.Views.MainPage"
+             Title="Тренажёр набора текста"
+             x:DataType="vm:MainViewModel">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="20">
+
+            <!-- Header -->
+            <Frame BackgroundColor="{StaticResource Primary}" Padding="20" CornerRadius="12">
+                <VerticalStackLayout Spacing="5">
+                    <Label Text="⌨️ Тренажёр набора"
+                           FontSize="28"
+                           FontAttributes="Bold"
+                           TextColor="{StaticResource White}"
+                           HorizontalOptions="Center" />
+                    <Label Text="Улучшайте скорость и точность набора текста"
+                           FontSize="14"
+                           TextColor="{StaticResource White}"
+                           Opacity="0.9"
+                           HorizontalOptions="Center" />
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Quick Stats -->
+            <Grid ColumnDefinitions="*,*,*" ColumnSpacing="10">
+                <Frame Grid.Column="0" Padding="12" BackgroundColor="#F3E5F5">
+                    <VerticalStackLayout HorizontalOptions="Center" Spacing="4">
+                        <Label Text="{Binding BestWPM, StringFormat='{0:F0}'}"
+                               FontSize="24" FontAttributes="Bold"
+                               TextColor="{StaticResource Primary}"
+                               HorizontalOptions="Center" />
+                        <Label Text="Лучший WPM"
+                               FontSize="10"
+                               TextColor="{StaticResource Gray500}"
+                               HorizontalOptions="Center" />
+                    </VerticalStackLayout>
+                </Frame>
+                <Frame Grid.Column="1" Padding="12" BackgroundColor="#E8F5E9">
+                    <VerticalStackLayout HorizontalOptions="Center" Spacing="4">
+                        <Label Text="{Binding AverageWPM, StringFormat='{0:F0}'}"
+                               FontSize="24" FontAttributes="Bold"
+                               TextColor="#4CAF50"
+                               HorizontalOptions="Center" />
+                        <Label Text="Средний WPM"
+                               FontSize="10"
+                               TextColor="{StaticResource Gray500}"
+                               HorizontalOptions="Center" />
+                    </VerticalStackLayout>
+                </Frame>
+                <Frame Grid.Column="2" Padding="12" BackgroundColor="#E3F2FD">
+                    <VerticalStackLayout HorizontalOptions="Center" Spacing="4">
+                        <Label Text="{Binding TotalSessions}"
+                               FontSize="24" FontAttributes="Bold"
+                               TextColor="#2196F3"
+                               HorizontalOptions="Center" />
+                        <Label Text="Сессий"
+                               FontSize="10"
+                               TextColor="{StaticResource Gray500}"
+                               HorizontalOptions="Center" />
+                    </VerticalStackLayout>
+                </Frame>
+            </Grid>
+
+            <!-- Dictionary Selection -->
+            <Frame Padding="16">
+                <VerticalStackLayout Spacing="12">
+                    <Label Text="Выберите словарь:"
+                           FontSize="18"
+                           FontAttributes="Bold" />
+
+                    <Picker Title="Словарь"
+                            ItemsSource="{Binding Dictionaries}"
+                            SelectedItem="{Binding SelectedDictionary}"
+                            ItemDisplayBinding="{Binding Name}" />
+
+                    <Label Text="{Binding SelectedDictionary.Description}"
+                           FontSize="12"
+                           TextColor="{StaticResource Gray500}"
+                           IsVisible="{Binding SelectedDictionary, Converter={StaticResource IsNotNullConverter}}" />
+
+                    <Label FontSize="12" TextColor="{StaticResource Gray400}">
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Text="Слов в словаре: " />
+                                <Span Text="{Binding SelectedDictionary.Words.Count}" FontAttributes="Bold" />
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Start Button -->
+            <Button Text="🚀 Начать тренировку"
+                    Command="{Binding StartGameCommand}"
+                    FontSize="20"
+                    HeightRequest="60"
+                    CornerRadius="12"
+                    BackgroundColor="{StaticResource Primary}" />
+
+            <!-- Navigation Buttons -->
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="10" RowDefinitions="Auto,Auto" RowSpacing="10">
+                <Button Grid.Column="0" Grid.Row="0"
+                        Text="📚 Словари"
+                        Command="{Binding NavigateToDictionariesCommand}"
+                        BackgroundColor="#7C4DFF"
+                        CornerRadius="10" />
+                <Button Grid.Column="1" Grid.Row="0"
+                        Text="📊 Статистика"
+                        Command="{Binding NavigateToStatisticsCommand}"
+                        BackgroundColor="#00BCD4"
+                        CornerRadius="10" />
+                <Button Grid.Column="0" Grid.Row="1"
+                        Grid.ColumnSpan="2"
+                        Text="⚙️ Настройки"
+                        Command="{Binding NavigateToSettingsCommand}"
+                        BackgroundColor="#FF7043"
+                        CornerRadius="10" />
+            </Grid>
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>
